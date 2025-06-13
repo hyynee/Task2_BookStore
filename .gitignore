@@ -1,0 +1,11 @@
+#Log
+logs
+*.logs
+
+fe_book/node_modules/
+be_book/node_modules/
+
+fe_ book/.env
+be_book/.env
+
+.DS_Store
