@@ -5,6 +5,7 @@ import bookReducer from './Reducer/bookReducer';
 import cartReducer from './Reducer/cartReducer';
 import checkoutReducer from './Reducer/checkoutReducer';
 import orderReducer from './Reducer/orderReducer';
+import adminOrderReducer from './Reducer/adminOrderReducer';
 export const store = configureStore({
     reducer: {
         auth: authReducer,
@@ -12,7 +13,8 @@ export const store = configureStore({
         books: bookReducer,
         cart: cartReducer,
         checkout: checkoutReducer,
-        order: orderReducer
+        order: orderReducer,
+        adminOrders: adminOrderReducer
     },
 });
 

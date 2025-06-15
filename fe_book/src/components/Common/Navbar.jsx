@@ -21,9 +21,11 @@ const Navbar = () => {
     const [drawerOpen, setCartDrawerOpen] = useState(false);
     const location = useLocation();
 
-    const { user, loading, error, guestId } = useSelector((state) => state.auth);
+    const { user } = useSelector((state) => state.auth);
+    const { cart } = useSelector(state => state.cart);
+    console.log(cart)
 
-    const cartItemsCount = 3;
+    const cartItemsCount = cart?.items?.reduce((total, prod) => total + prod.quantity, 0) || 0;
 
     useEffect(() => {
         if (location.pathname !== '/') {

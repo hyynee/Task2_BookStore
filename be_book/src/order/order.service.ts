@@ -72,6 +72,7 @@ export class OrderService {
             ? new Date(Date.now())
             : getOrder.deliveredAt;
         const updatedOrder = await getOrder.save();
+        await updatedOrder.populate('userId', 'name email');
         return {
           status: 200,
           message: 'Order updated successfully',

@@ -2,6 +2,8 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import AdminLayout from "./components/Admin/AdminLayout";
 import BookManagement from "./components/Admin/BookManagement";
 import CreateBook from "./components/Admin/CreateBook";
+import EditBookPage from "./components/Admin/EditBookPage";
+import OrderManagement from "./components/Admin/OrderManagement";
 import BestSeller from "./components/Books/BestSeller";
 import BookDetail from "./components/Books/BookDetail";
 import FeaturedBook from "./components/Books/FeaturedBook";
@@ -47,6 +49,8 @@ function App() {
             <Route index element={<AdminHomePages />} />
             <Route path="products" element={<BookManagement />} />
             <Route path="products/create" element={<CreateBook />} />
+            <Route path='books/:id/edit' element={<EditBookPage />} />
+            <Route path='orders' element={<OrderManagement />} />
           </Route>
           {/* Fallback route for unmatched paths */}
           <Route path="*" element={<Home />} />
