@@ -1,15 +1,22 @@
 import React from 'react';
 import { IoClose } from 'react-icons/io5';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
+import BookCartContents from '../Cart/BookCartContents';
 const CartDraw = ({ drawerOpen, toggleCardDrawer }) => {
-    // Mock cart data since no API is implemented
-    const cartItems = [
-        { id: 1, name: 'Men’s T-Shirt', price: 29.99, quantity: 2, image: 'https://via.placeholder.com/80' },
-        { id: 2, name: 'Women’s Jeans', price: 59.99, quantity: 1, image: 'https://via.placeholder.com/80' },
-    ];
+    const dispatch = useDispatch();
+    const { cart } = useSelector(state => state.cart);
+    const { user, guestId } = useSelector(state => state.auth);
+    const userId = user ? user?._id : null;
 
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+    // useEffect(() => {
+    //     if (drawerOpen && (userId || guestId)) {
+    //         dispatch(fetchCart({ userId, guestId }));
+    //     }
+    // }, [dispatch, drawerOpen, userId, guestId]);
+
+    const cartItems = cart?.items || [];
+    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     return (
         <div
@@ -22,37 +29,36 @@ const CartDraw = ({ drawerOpen, toggleCardDrawer }) => {
                     <IoClose className="size-6 text-gray-600" />
                 </button>
             </div>
-            <div className="p-4">
+
+            <div className="p-4 flex-1 overflow-y-auto">
                 {cartItems.length === 0 ? (
                     <p className="text-gray-600">Your cart is empty</p>
                 ) : (
-                    <div className="space-y-4">
-                        {cartItems.map((item) => (
-                            <div key={item.id} className="flex items-center gap-4 border-b pb-4">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="w-20 h-20 object-cover rounded"
-                                />
-                                <div className="flex-1">
-                                    <h3 className="text-sm font-medium">{item.name}</h3>
-                                    <p className="text-gray-600 text-sm">${item.price.toFixed(2)} x {item.quantity}</p>
-                                </div>
-                                <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                    <>
+                        {/*  BookCartContents  */}
+                        <BookCartContents
+                            cart={cart}
+                            userId={userId}
+                            guestId={guestId}
+                        />
+
+                        {/*  Checkout  */}
+                        <div className="mt-6 pt-4 border-t">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-lg font-semibold">Total:</span>
+                                <span className="text-lg font-semibold">
+                                    {Number(total)?.toLocaleString("vi-VN")} VND
+                                </span>
                             </div>
-                        ))}
-                        <div className="flex justify-between items-center pt-4">
-                            <span className="text-lg font-semibold">Total:</span>
-                            <span className="text-lg font-semibold">${total}</span>
+                            <Link
+                                to="/checkout"
+                                onClick={toggleCardDrawer}
+                                className="block w-full bg-orange-400 text-white text-center py-2 rounded-full hover:bg-orange-500 transition-all"
+                            >
+                                Proceed to Checkout
+                            </Link>
                         </div>
-                        <Link
-                            to="/checkout"
-                            onClick={toggleCardDrawer}
-                            className="block w-full bg-orange-400 text-white text-center py-2 rounded-full mt-4 hover:bg-orange-500 transition-all"
-                        >
-                            Proceed to Checkout
-                        </Link>
-                    </div>
+                    </>
                 )}
             </div>
         </div>

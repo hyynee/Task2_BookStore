@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { fetchBookDetail, fetchSimilarBooks } from '../../redux/Reducer/bookReducer';
+import { addToCart } from '../../redux/Reducer/cartReducer';
 import BookGrid from './BookGrid';
 const BookDetail = ({ bookId }) => {
   const { id } = useParams();
@@ -54,7 +55,7 @@ const BookDetail = ({ bookId }) => {
   return (
     <div className="container mx-auto px-8 py-20">
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/')}
         className="mb-6 px-4 py-2 text-sm font-medium border border-gray-300 rounded bg-white hover:bg-gray-100 transition-colors duration-300 shadow-md hover:shadow-lg text-gray-700 hover:text-gray-900"
       >
         Back to Books
@@ -65,8 +66,8 @@ const BookDetail = ({ bookId }) => {
           {/* Book Image */}
           <div>
             <img
-              src={selectedBook.image || 'https://via.placeholder.com/300'}
-              alt={selectedBook.title}
+              src={selectedBook?.image}
+              alt={selectedBook?.title}
               className="w-full h-auto rounded-lg shadow-md"
             />
           </div>

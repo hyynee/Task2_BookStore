@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import Filter from '../components/Books/Filter';
 import StarRating from '../components/Common/StarRating';
 import { fetchBooksByFilters } from '../redux/Reducer/bookReducer';
+import { addToCart } from '../redux/Reducer/cartReducer';
 
 const AllBooks = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [openFilter, setOpenFilter] = useState(false);
-    // Khởi tạo filters từ searchParams
+    const [isAdding, setIsAdding] = useState({});
+
     const [filters, setFilters] = useState({
         author: searchParams.get('author') || '',
         minPrice: searchParams.get('minPrice') || undefined,
@@ -21,11 +24,12 @@ const AllBooks = () => {
         limit: Number(searchParams.get('limit')) || 10,
         accessPublic: searchParams.get('accessPublic') === 'false' ? false : true,
     });
+
     const { books, loading, error } = useSelector((state) => state.books);
+    const { user, guestId } = useSelector((state) => state.auth); // Lấy guestId từ auth
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // Cập nhật URL và gọi API khi filters thay đổi
         const queryParams = {};
         if (filters.author) queryParams.author = filters.author;
         if (filters.minPrice) queryParams.minPrice = filters.minPrice;
@@ -37,17 +41,15 @@ const AllBooks = () => {
         if (filters.limit) queryParams.limit = filters.limit;
         if (filters.accessPublic !== undefined) queryParams.accessPublic = filters.accessPublic;
 
-        setSearchParams(queryParams); // Cập nhật URL
+        setSearchParams(queryParams);
         fetchBooksWithFilters();
     }, [filters]);
 
     const fetchBooksWithFilters = () => {
-        console.log('Fetching with filters:', filters);
         dispatch(fetchBooksByFilters(filters));
     };
 
     const handleFilterChange = (type, value, checked) => {
-        console.log(`${type} filter changed: ${value} is ${checked ? 'selected' : 'deselected'}`);
         setFilters(prevFilters => {
             const newFilters = { ...prevFilters };
             switch (type) {
@@ -112,6 +114,22 @@ const AllBooks = () => {
         });
     };
 
+    const handleAddToCart = (bookId) => {
+        setIsAdding(prev => ({ ...prev, [bookId]: true }));
+        const userId = user?._id; // Lấy userId từ auth.user
+
+        dispatch(addToCart({ userId, guestId, bookId, quantity: 1 }))
+            .then(() => {
+                toast.success('Book added to cart.', { duration: 1000 });
+            })
+            .catch((err) => {
+                toast.error('Failed to add to cart: ' + (err.payload?.message || 'Unknown error'), { duration: 1000 });
+            })
+            .finally(() => {
+                setIsAdding(prev => ({ ...prev, [bookId]: false }));
+            });
+    };
+
     const authors = ['Sun Tzu', 'George Orwell', 'Harper Lee', 'F. Scott Fitzgerald'];
     const priceRanges = ['$0 - $10', '$11 - $20', '$21 - $30', '$31 and above'];
     const minReviewsOptions = [10, 50, 100, 500];
@@ -146,7 +164,7 @@ const AllBooks = () => {
                                 key={book._id}
                             >
                                 <img
-                                    src={book.image || 'https://via.placeholder.com/150'}
+                                    src={book?.image}
                                     alt="book-img"
                                     title="View Book Details"
                                     className="max-h-65 md:w-1/2 rounded-xl shadow-lg object-cover cursor-pointer"
@@ -172,10 +190,11 @@ const AllBooks = () => {
                                             ${book.price}
                                         </span>
                                         <button
-                                            className="bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-500 transition-colors"
-                                            onClick={() => { console.log(`Added ${book._id} to cart`) }}
+                                            className={`bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-500 transition-colors ${isAdding[book._id] ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            onClick={() => handleAddToCart(book._id)}
+                                            disabled={isAdding[book._id]}
                                         >
-                                            Add to Cart
+                                            {isAdding[book._id] ? 'Adding...' : 'Add to Cart'}
                                         </button>
                                     </div>
                                 </div>

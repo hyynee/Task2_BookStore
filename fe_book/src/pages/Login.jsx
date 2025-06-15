@@ -1,13 +1,16 @@
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import Title from '../components/Books/Title.jsx';
 import { loginUser } from '../redux/Reducer/authReducer.jsx';
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirect = new URLSearchParams(location.search).get('redirect') || "/";
+  const isCheckoutRedirect = redirect.includes('checkout');
   const { user, loading, error, guestId } = useSelector((state) => state.auth);
   const frm = useFormik({
     initialValues: {

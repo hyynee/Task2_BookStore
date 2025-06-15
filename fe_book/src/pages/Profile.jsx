@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../redux/Reducer/authReducer';
-// import { clearCart } from '../redux/slices/cartSlices';
-// import MyOrders from './MyOrders';
+import { clearCart } from '../redux/Reducer/cartReducer';
+import MyOrders from './MyOrders';
 const Profile = () => {
     const { user } = useSelector(state => state.auth);
     const navigate = useNavigate();
@@ -17,11 +17,11 @@ const Profile = () => {
 
     const handleLogout = () => {
         dispatch(logout());
-        // dispatch(clearCart())
+        dispatch(clearCart())
         navigate('/login');
     }
     return (
-        <div className='min-h-screen flex flex-col'>
+        <div className='min-h-screen flex flex-col py-20'>
             <div className="flex-row container-fluid mx-auto md:p-6">
                 <div className="flex flex-col md:flex-row md:space-x-6 space-y-6 md:space-y-0">
                     {/* left */}
@@ -32,7 +32,7 @@ const Profile = () => {
                     </div>
                     {/* right */}
                     <div className='w-full md:w-2/3 lg:w-3/4 shadow-md rounded-lg p-6'>
-                        {/* <MyOrders /> */}
+                        <MyOrders />
                     </div>
                 </div>
             </div>

@@ -11,6 +11,9 @@ import AdminHomePages from "./pages/AdminPage/AdminHomePages";
 import AllBooks from "./pages/AllBooks";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import MyOrders from "./pages/MyOrders";
+import OrderComfirm from "./pages/OrderComfirm";
+import OrderDetail from "./pages/OrderDetail";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import AdminPrivateRoute from "./utils/PrivateRoute";
@@ -35,6 +38,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path='order-confirmation' element={<OrderComfirm />} />
+          <Route path='order/:id' element={<OrderDetail />} />
+          <Route path='my-orders' element={<MyOrders />} />
 
           {/* ADMIN LAYOUT */}
           <Route path="/admin" element={<AdminPrivateRoute role="admin"><AdminLayout /></AdminPrivateRoute>}>
