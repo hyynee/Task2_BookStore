@@ -16,6 +16,7 @@ exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const mongoose_1 = require("@nestjs/mongoose");
+const bcrypt = require("bcrypt");
 const mongoose_2 = require("mongoose");
 const user_schema_1 = require("../../Schemas/user.schema");
 let UserService = class UserService {
@@ -26,7 +27,6 @@ let UserService = class UserService {
         this.jwtService = jwtService;
     }
     async register(createUserDto) {
-        console.log('createUserDto:', createUserDto);
         const { email, phone } = createUserDto;
         try {
             const existingUser = await this.userModel.findOne({
@@ -67,7 +67,6 @@ let UserService = class UserService {
     }
     async login(login) {
         const { email, password } = login;
-        console.log('login:', login);
         try {
             const user = await this.userModel.findOne({
                 email,
@@ -99,6 +98,46 @@ let UserService = class UserService {
     async getUserById(id) {
         const user = await this.userModel.findById(id);
         return user;
+    }
+    async getAllUsers() {
+        const users = await this.userModel.find();
+        return users;
+    }
+    async updateUser(id, createUserDto) {
+        try {
+            const user = await this.userModel.findById(id);
+            if (!user) {
+                return {
+                    status: 404,
+                    message: 'User not found',
+                    user: undefined,
+                };
+            }
+            const updateData = {
+                name: createUserDto.name || user.name,
+                email: createUserDto.email || user.email,
+                phone: createUserDto.phone || user.phone,
+                address: createUserDto.address || user.address,
+                role: createUserDto.role || user.role,
+            };
+            if (createUserDto.password) {
+                const salt = await bcrypt.genSalt(10);
+                updateData.password = await bcrypt.hash(createUserDto.password, salt);
+            }
+            const updatedUser = await this.userModel.findByIdAndUpdate(id, { $set: updateData }, { new: true });
+            return {
+                status: 200,
+                message: 'User updated successfully',
+                user: updatedUser,
+            };
+        }
+        catch (err) {
+            console.error('Error updating user:', err);
+            throw new common_1.HttpException({
+                statusCode: 500,
+                message: err.message || 'Internal server error',
+            }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 };
 exports.UserService = UserService;

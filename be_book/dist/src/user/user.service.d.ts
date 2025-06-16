@@ -16,9 +16,23 @@ export declare class UserService {
         token: string;
     }>;
     getCurrentUser(req: any): Promise<any>;
-    getUserById(id: string): Promise<(import("mongoose").Document<unknown, {}, User, {}> & User & Required<{
+    getUserById(id: string | null): Promise<User | null>;
+    getAllUsers(): Promise<(import("mongoose").Document<unknown, {}, User, {}> & User & Required<{
         _id: unknown;
     }> & {
         __v: number;
-    }) | null>;
+    })[]>;
+    updateUser(id: string, createUserDto: CreateUserDTO): Promise<{
+        status: number;
+        message: string;
+        user: undefined;
+    } | {
+        status: number;
+        message: string;
+        user: (import("mongoose").Document<unknown, {}, User, {}> & User & Required<{
+            _id: unknown;
+        }> & {
+            __v: number;
+        }) | null;
+    }>;
 }

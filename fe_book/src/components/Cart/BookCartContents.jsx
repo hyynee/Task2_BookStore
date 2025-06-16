@@ -94,11 +94,11 @@ const BookCartContents = ({ cart, userId, guestId, isDrawer = false }) => {
                         <div className='flex flex-col items-end ml-2'>
                             <p className={`font-medium ${isDrawer ? 'text-sm' : 'text-base'
                                 }`}>
-                                {Number(item.price)?.toLocaleString("vi-VN")} VND
+                                {Number(item.price)?.toLocaleString("es-US")} $
                             </p>
                             {!isDrawer && (
                                 <p className='text-sm text-gray-500'>
-                                    Subtotal: {Number(item.price * item.quantity)?.toLocaleString("vi-VN")} VND
+                                    Subtotal: {Number(item.price * item.quantity)?.toLocaleString("es-US")} $
                                 </p>
                             )}
                             <button

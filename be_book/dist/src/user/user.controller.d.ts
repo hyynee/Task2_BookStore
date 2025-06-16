@@ -12,9 +12,24 @@ export declare class UserController {
         user: import("../../Schemas/user.schema").User;
         token: string;
     }>;
-    getCurrentUser(CurrentUser: any): Promise<(import("mongoose").Document<unknown, {}, import("../../Schemas/user.schema").User, {}> & import("../../Schemas/user.schema").User & Required<{
+    getCurrentUser(CurrentUser: any): Promise<import("../../Schemas/user.schema").User | null>;
+    getAllUsers(): Promise<(import("mongoose").Document<unknown, {}, import("../../Schemas/user.schema").User, {}> & import("../../Schemas/user.schema").User & Required<{
         _id: unknown;
     }> & {
         __v: number;
-    }) | null>;
+    })[]>;
+    getUserByID(id: string): Promise<import("../../Schemas/user.schema").User | null>;
+    updateUser(id: string, createUserDto: CreateUserDTO): Promise<{
+        status: number;
+        message: string;
+        user: undefined;
+    } | {
+        status: number;
+        message: string;
+        user: (import("mongoose").Document<unknown, {}, import("../../Schemas/user.schema").User, {}> & import("../../Schemas/user.schema").User & Required<{
+            _id: unknown;
+        }> & {
+            __v: number;
+        }) | null;
+    }>;
 }
