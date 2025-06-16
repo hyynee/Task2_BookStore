@@ -130,7 +130,7 @@ const AllBooks = () => {
             });
     };
 
-    const authors = ['Sun Tzu', 'George Orwell', 'Harper Lee', 'F. Scott Fitzgerald'];
+    const authors = books.map(book => book.author).filter((author, index, authors) => authors.indexOf(author) === index);
     const priceRanges = ['$0 - $10', '$11 - $20', '$21 - $30', '$31 and above'];
     const minReviewsOptions = [10, 50, 100, 500];
     const sortOptions = ['Price: Low to High', 'Price: High to Low', 'Popularity'];

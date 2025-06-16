@@ -27,11 +27,18 @@ let UserService = class UserService {
     }
     async register(createUserDto) {
         console.log('createUserDto:', createUserDto);
-        const { email } = createUserDto;
+        const { email, phone } = createUserDto;
         try {
-            const user = await this.userModel.findOne({ email });
-            if (user) {
-                throw new common_1.HttpException({ statusCode: 400, message: 'Email already exists' }, common_1.HttpStatus.BAD_REQUEST);
+            const existingUser = await this.userModel.findOne({
+                $or: [{ email }, { phone }],
+            });
+            if (existingUser) {
+                if (existingUser.email === email) {
+                    throw new common_1.HttpException({ statusCode: 400, message: 'Email already exists' }, common_1.HttpStatus.BAD_REQUEST);
+                }
+                if (existingUser.phone === phone) {
+                    throw new common_1.HttpException({ statusCode: 400, message: 'Phone number already exists' }, common_1.HttpStatus.BAD_REQUEST);
+                }
             }
             const newUser = new this.userModel(createUserDto);
             await newUser.save();

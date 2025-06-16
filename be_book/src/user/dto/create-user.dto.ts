@@ -8,7 +8,7 @@ export class CreateUserDTO {
   @ApiProperty()
   password: string;
   @ApiProperty()
-  phoneNumber: string;
+  phone: string;
   @ApiProperty()
   address: string;
   role?: 'admin' | 'customer';

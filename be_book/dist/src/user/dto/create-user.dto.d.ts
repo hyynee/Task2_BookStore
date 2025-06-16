@@ -2,7 +2,7 @@ export declare class CreateUserDTO {
     name: string;
     email: string;
     password: string;
-    phoneNumber: string;
+    phone: string;
     address: string;
     role?: 'admin' | 'customer';
 }

@@ -15,7 +15,7 @@ class CreateUserDTO {
     name;
     email;
     password;
-    phoneNumber;
+    phone;
     address;
     role;
 }
@@ -35,7 +35,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
-], CreateUserDTO.prototype, "phoneNumber", void 0);
+], CreateUserDTO.prototype, "phone", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)

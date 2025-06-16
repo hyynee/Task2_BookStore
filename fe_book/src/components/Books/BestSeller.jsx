@@ -1,17 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { fetchBestSellerBooks } from '../../redux/Reducer/bookReducer';
+import { addToCart } from '../../redux/Reducer/cartReducer';
 import StarRating from '../Common/StarRating';
-
 const BestSeller = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user, guestId } = useSelector((state) => state.auth);
     const { bestSeller, loading, error } = useSelector((state) => state.books);
-
+    const [isAdding, setIsAdding] = useState({});
     useEffect(() => {
         dispatch(fetchBestSellerBooks());
     }, [dispatch]);
+    const handleAddToCart = (bookId) => {
+        setIsAdding(prev => ({ ...prev, [bookId]: true }));
+        const userId = user?._id; // Lấy userId từ auth.user
+
+        dispatch(addToCart({ userId, guestId, bookId, quantity: 1 }))
+            .then(() => {
+                toast.success('Book added to cart.', { duration: 1000 });
+            })
+            .catch((err) => {
+                toast.error('Failed to add to cart: ' + (err.payload?.message || 'Unknown error'), { duration: 1000 });
+            })
+            .finally(() => {
+                setIsAdding(prev => ({ ...prev, [bookId]: false }));
+            });
+    };
 
     if (loading) return (
         <div className="flex justify-center items-center min-h-screen">
@@ -24,7 +41,7 @@ const BestSeller = () => {
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <div className="bg-gray-50 min-h-screen py-30 px-4 sm:px-6 lg:px-8 ">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-12">
                     <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
@@ -67,8 +84,12 @@ const BestSeller = () => {
 
                                 <div className="flex space-x-4">
                                     <button
-                                        className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                                        Add to Cart
+                                        className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                                        onClick={() => handleAddToCart(bestSeller._id)}
+                                        disabled={isAdding[bestSeller._id]}
+                                    >
+
+                                        {isAdding[bestSeller._id] ? 'Adding...' : 'Add to Cart'}
                                     </button>
                                     <button
                                         onClick={() => navigate(`/books/${bestSeller._id}`)}

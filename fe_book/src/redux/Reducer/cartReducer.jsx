@@ -3,7 +3,6 @@ import { http, sessionStorageUtils } from '../../utils/config';
 
 const loadCartFromStorage = () => {
     const storedCart = sessionStorageUtils.getActiveSession()?.cart;
-    console.log('🛒 LOADING CART FROM STORAGE:', storedCart);
     return storedCart ? storedCart : { items: [] };
 }
 

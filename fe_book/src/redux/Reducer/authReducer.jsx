@@ -38,6 +38,7 @@ export const registerUser = createAsyncThunk(
     async (userData, { rejectWithValue }) => {
         try {
             const response = await http.post('/user/register', userData);
+            console.log('Register response:', response);
             const data = response.data; // { user, token }
             sessionStorageUtils.saveSession({
                 email: data.user.email,
@@ -47,7 +48,9 @@ export const registerUser = createAsyncThunk(
             });
             return data;
         } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
+            console.log('Full error object:', error);
+            console.log('Error response:', error.response?.data.message);
+            return rejectWithValue(error);
         }
     }
 );

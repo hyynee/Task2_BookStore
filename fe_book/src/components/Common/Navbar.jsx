@@ -23,7 +23,6 @@ const Navbar = () => {
 
     const { user } = useSelector((state) => state.auth);
     const { cart } = useSelector(state => state.cart);
-    console.log(cart)
 
     const cartItemsCount = cart?.items?.reduce((total, prod) => total + prod.quantity, 0) || 0;
 

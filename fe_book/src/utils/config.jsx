@@ -29,7 +29,8 @@ http.interceptors.response.use((res) => {
 }, err => {
     if (err.response?.status === 401) {
         history.push('/login')
-    }
+    };
+    return Promise.reject(err.response?.data || err);
 });
 
 // Session storage utilities
